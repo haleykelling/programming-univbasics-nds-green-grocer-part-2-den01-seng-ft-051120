@@ -1,9 +1,25 @@
 require_relative './part_1_solution.rb'
+require "pry"
 
 def apply_coupons(cart, coupons)
-  # Consult README for inputs and outputs
-  #
-  # REMEMBER: This method **should** update cart
+  coupons.each do |coupon|
+    n = 0
+    while n < cart.length do
+      current_item_hash = cart[n]
+      if coupon[:item] == current_item_hash[:item]
+        if current_item_hash[:count] >= coupon[:num]
+          number_of_full_priced_items = current_item_hash[:count] % coupon[:num]
+          number_of_sale_items = current_item_hash[:count] - number_of_full_priced_items
+          new_cost_per_sale_item = coupon[:cost]/coupon[:num]
+          current_item_hash[:count] = number_of_full_priced_items
+          current_item_name = current_item_hash[:item]
+          cart << {:item => "#{current_item_name} W/COUPON", :price => new_cost_per_sale_item, :clearance => current_item_hash[:clearance], :count => number_of_sale_items}
+        end
+      end
+      n += 1
+    end
+  end
+  cart
 end
 
 def apply_clearance(cart)
